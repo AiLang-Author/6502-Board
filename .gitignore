@@ -1,0 +1,5 @@
+*.x
+*.log
+lorenz_run.log
+klaus_run.log
+chips-ref/chips/
