@@ -25,10 +25,17 @@ Sibling of [C64-BASIC-GTK](https://github.com/AiLang-Author/C64-BASIC-GTK) (inte
 | VIC/SID | Register files (floooh/chips pin model next) |
 | CIA | `Library.MOS6526` regs + timer A |
 
+## Import
+
+```
+Import.Librarys.Emulators.6502.C64
+Import.Librarys.Emulators.6502.CPU
+```
+
 ## Layout
 
 ```
-Librarys/     CPU6502 Bus6502 Board6502 C64Pack MOS6526 MOS6569 MOS6581
+Librarys/Emulators/6502/   CPU Bus Board C64 MOS6526 MOS6569 MOS6581
 boards/       c64.board.json  smoke.board.json
 tests/        smoke, Klaus blob, Lorenz 2.15, board smokes
 docs/         BOARD.md  6502_DESIGN.md
