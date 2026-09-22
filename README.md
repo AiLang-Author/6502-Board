@@ -18,10 +18,10 @@ Sibling of [C64-BASIC-GTK](https://github.com/AiLang-Author/C64-BASIC-GTK) (inte
 | Piece | State |
 |---|---|
 | NMOS 6502 documented opcodes | Klaus Dormann **PASS** (30,646,177 steps, trap `$3469`) |
-| Unofficial opcodes | Implemented; Lorenz smoke + chaining |
+| Unofficial opcodes | Lorenz CPU chain **PASS** (ANE/LXA/SHA too) |
 | JSON board loader | **PASS** (`ProbeASIC` at `$DE00`) |
 | C64 pack + KERNAL stubs | **PASS** (`JSR $FFD2`, VIC `$D020`, 6510 `$01`) |
-| Lorenz suite | **not finished** — 148 tests OK then stuck dumping `EOR (zp),Y` (`$51`) |
+| Lorenz suite | **PASS** 238 loads, trap17, 1.63e9 steps |
 | VIC/SID | Register files (floooh/chips pin model next) |
 | CIA | `Library.MOS6526` regs + timer A |
 
