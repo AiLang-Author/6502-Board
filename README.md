@@ -5,25 +5,27 @@ JSON motherboard + pluggable MOS chip models, written in [Ailang](https://github
 The **board file is a schematic**. Chips are Ailang libraries. Runtime pointers are LinkagePool; methods plug with `AddressOf` / `CallIndirect`.
 
 ```
-c64.board.json                 Library.CPU6502 / MOS6569 / MOS6526 / MOS6581
+c64.board.json                 CPU / MOS6569 / MOS6526 / MOS6581
   chips[]  ---- model ------>  Chip_Read / Write / Tick
   maps[]   ---- decode ----->  Bus6502_MapIO
   nets[]   ---- wires ------>  irq, nmi, phi2
 ```
 
-Sibling of [C64-BASIC-GTK](https://github.com/AiLang-Author/C64-BASIC-GTK) (interpreter, not this machine).
+Sibling of [C64-BASIC-GTK](https://github.com/AiLang-Author/C64-BASIC-GTK) (interpreter, not this machine). Canonical public repo: **https://github.com/AiLang-Author/6502-Board**
 
 ## Status
 
 | Piece | State |
 |---|---|
 | NMOS 6502 documented opcodes | Klaus Dormann **PASS** (30,646,177 steps, trap `$3469`) |
-| Unofficial opcodes | Lorenz CPU chain **PASS** (ANE/LXA/SHA too) |
+| Unofficial opcodes | Lorenz CPU chain **PASS** (ANE/LXA/SHA family) |
 | JSON board loader | **PASS** (`ProbeASIC` at `$DE00`) |
 | C64 pack + KERNAL stubs | **PASS** (`JSR $FFD2`, VIC `$D020`, 6510 `$01`) |
-| Lorenz suite | **PASS** 238 loads, trap17, 1.63e9 steps |
-| VIC/SID | Register files (floooh/chips pin model next) |
-| CIA | `Library.MOS6526` regs + timer A |
+| PLA `$01` fetch map | **PASS** (`mmufetch` / `mmu` / `cpuport`; `$34` is 64K RAM at `$D000`) |
+| CIA | timers A+B, 2-cycle start delay, ICR/IMR, TA→TB cascade |
+| IRQ / NMI | CIA1 → IRQ; CIA2 rising edge → `CPU.nmi_pending` (`nmi_smoke` **PASS**) |
+| VIC | NTSC raster `$D011`/`$D012` (65 cyc/line); paint via display libs later |
+| Lorenz 2.15 | 245 OK through `irq` on the previous binary; `nmi` hung until CIA2 NMI; full rerun in flight |
 
 ## Import
 
@@ -36,23 +38,22 @@ Import.Librarys.Emulators.6502.CPU
 
 ```
 Librarys/Emulators/6502/   CPU Bus Board C64 MOS6526 MOS6569 MOS6581
-boards/       c64.board.json  smoke.board.json
-tests/        smoke, Klaus blob, Lorenz 2.15, board smokes
-docs/         BOARD.md  6502_DESIGN.md
-chips-ref/    floooh/chips zlib headers (reference only, not compiled)
+docs/emu/boards/           c64.board.json  smoke.board.json
+tests/emu6502/             smoke, Klaus, Lorenz 2.15, PLA/NMI/CIA smokes
+docs/emu/                  BOARD.md  6502_DESIGN.md
+docs/emu/chips-ref/        floooh/chips zlib headers (reference only)
 ```
 
 ## Build
 
-Needs `ailang.x` from Ailang-Self-Hosting (libraries `Arena` / `JSON` come from there). From this repo:
+Needs `ailang.x` from Ailang-Self-Hosting (libraries `Arena` / `JSON` come from there). While this tree still lives inside Ailang-Self-Hosting:
 
 ```
-export AILANG=/path/to/Ailang-Self-Hosting-
-"$AILANG/ailang.x" tests/board_smoke.ailang /tmp/board_smoke.x
-/tmp/board_smoke.x
+./ailang.x tests/emu6502/nmi_smoke.ailang /tmp/nmi_smoke.x
+/tmp/nmi_smoke.x
 ```
 
-Or keep this tree inside `Ailang-Self-Hosting-` as today (`tests/emu6502/`, `Librarys/Library.CPU6502.ailang`, `docs/emu/`).
+Standalone clone: set `AILANG` to the self-hosting tree and compile the same tests from this repo.
 
 ## License
 
