@@ -22,10 +22,10 @@ Sibling of [C64-BASIC-GTK](https://github.com/AiLang-Author/C64-BASIC-GTK) (inte
 | JSON board loader | **PASS** (`ProbeASIC` at `$DE00`) |
 | C64 pack + KERNAL stubs | **PASS** (`JSR $FFD2`, VIC `$D020`, 6510 `$01`) |
 | PLA `$01` fetch map | **PASS** (`mmufetch` / `mmu` / `cpuport`; `$34` is 64K RAM at `$D000`) |
-| CIA | timers A+B, 2-cycle start delay, ICR/IMR, TA→TB cascade |
-| IRQ / NMI | CIA1 → IRQ; CIA2 rising edge → `CPU.nmi_pending` (`nmi_smoke` **PASS**) |
+| CIA | timers A+B, per-CPU-cycle phi2, start delay 3 (write+2), ICR/IMR, TA→TB cascade, PB6/PB7 overlay; IRQ pin one cycle after underflow; ICR read clears the pipe |
+| IRQ / NMI | CIA1 → IRQ; CIA2 rising edge → `CPU.nmi_pending`; Lorenz `nmi` `$DD0D` t−1/t/t+1 **PASS** |
 | VIC | NTSC raster `$D011`/`$D012` (65 cyc/line); paint via display libs later |
-| Lorenz 2.15 | 245 OK through `irq` on the previous binary; `nmi` hung until CIA2 NMI; full rerun in flight |
+| Lorenz 2.15 | through `nmi`, CIA timers/PB/TAB, `loadth`, `cnto2`, `icr01` (warnings), `imr`, `flipos`; **TIMEOUT** on `oneshot` (`CRA IS NOT $08 AT ICR=$01`, 2e9 steps) |
 
 ## Import
 
